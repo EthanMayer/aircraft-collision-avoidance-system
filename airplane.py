@@ -52,13 +52,14 @@ class Airplane:
 
     # Print formatting
     def __str__(self) -> str:
-        return f"Plane @ {self.position} heading {self.heading.name} toward {self.destination}"
+        if (self.position != self.destination):
+            return f"Plane @ {self.position} heading {self.heading.name} toward {self.destination} @ speed 1"
+        else:
+            return f"Plane arrived at {self.destination}"
 
     # Update the plane's position using heading received from the centralized controller
     def run(self):
-        if (self.position == self.destination):
-            print(f"Plane arrived at {self.destination}")
-        else:
+        if (self.position != self.destination):
             if (self.heading == Heading.EAST):
                 self.position.x = self.position.x + self.speed
             elif (self.heading == Heading.WEST):

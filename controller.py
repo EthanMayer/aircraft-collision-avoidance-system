@@ -9,67 +9,74 @@ from airplane import *
 # Class for the centralized aircraft controller
 class Controller:
     # Class variables
-    airplane: Airplane
-    x_distance: int
-    y_distance: int
-    z_distance: int
-    heading: Heading
-    x_set = False
-    y_set = False
+    airplane: list
+    #airplane: Airplane
+    x_distance: list
+    y_distance: list
+    z_distance: list
+    # heading = list()
+    x_set: list
+    y_set: list
     x_o: int = 0 # TODO: Temporary other airplane coordinate
     y_o: int = 0 # TODO: Temporary other airplane coordinate
 
     # Class methods
     # Initialize the controller with the airplanes it is controlling
-    def __init__(self, airplane: Airplane) -> None:
+    def __init__(self, airplane: list) -> None:
         self.airplane = airplane
+        n = len(self.airplane)
+        self.x_distance = [int] * n
+        self.y_distance = [int] * n
+        self.z_distance = [int] * n
+        self.x_set = [False] * n
+        self.y_set = [False] * n
 
     # Function to calculate the distance the airplane needs to travel
-    def calculate_distance(self, airplane: Airplane):
-        origin = airplane.origin
-        destination = airplane.destination
-        self.x_distance = destination.x - origin.x
-        self.y_distance = destination.y - origin.y
+    def calculate_distance(self, ID):
+        origin = self.airplane[ID].origin
+        destination = self.airplane[ID].destination
+        self.x_distance[ID] = destination.x - origin.x
+        self.y_distance[ID] = destination.y - origin.y
         # self.z_distance TODO: Altitude calculations
     
     # Function to calculate the heading the plane needs to use
-    def calculate_heading(self):
+    def calculate_heading(self, ID):
         # Traverse either x axis or y axis one at a time, prioritizing x axis
-        if not self.y_set:
-            if (self.x_distance > 0):
-                self.heading = Heading.EAST
-                self.x_set = True
-            elif (self.x_distance < 0):
-                self.heading = Heading.WEST
-                self.x_set = True
-        if not self.x_set:
-            if (self.y_distance > 0):
-                self.heading = Heading.NORTH
-                self.y_set = True
-            elif (self.y_distance < 0):
-                self.heading = Heading.SOUTH
-                self.y_set = True
+        if not self.y_set[ID]:
+            if (self.x_distance[ID] > 0):
+                self.airplane[ID].heading = Heading.EAST
+                self.x_set[ID] = True
+            elif (self.x_distance[ID] < 0):
+                self.airplane[ID].heading = Heading.WEST
+                self.x_set[ID] = True
+        if not self.x_set[ID]:
+            if (self.y_distance[ID] > 0):
+                self.airplane[ID].heading = Heading.NORTH
+                self.y_set[ID] = True
+            elif (self.y_distance[ID] < 0):
+                self.airplane[ID].heading = Heading.SOUTH
+                self.y_set[ID] = True
             
 
     # Function to check for possible collisions
-    def check_for_collision(self, airplane: Airplane):
+    def check_for_collision(self, ID):
         # Check for collision along the x axis and have all planes turn right if true
-        if self.x_set and (self.x_o == airplane.position.x - (self.x_distance - 1)):
-            if (self.heading == Heading.EAST):
-                self.heading = Heading.SOUTH
-            elif (self.heading == Heading.WEST):
-                self.heading = Heading.NORTH
-            self.x_set = False
-            self.y_set = True
+        if self.x_set[ID] and (self.x_o == self.airplane[ID].position.x - (self.x_distance[ID] - 1)):
+            if (self.airplane[ID].heading == Heading.EAST):
+                self.airplane[ID].heading = Heading.SOUTH
+            elif (self.airplane[ID].heading == Heading.WEST):
+                self.airplane[ID].heading = Heading.NORTH
+            self.x_set[ID] = False
+            self.y_set[ID] = True
 
         # Check for collision along the y axis and have all planes turn right if true
-        if self.y_set and (self.y_o == airplane.position.y - (self.y_distance - 1)):
-            if (self.heading == Heading.NORTH):
-                self.heading = Heading.EAST
-            elif (self.heading == Heading.SOUTH):
-                self.heading = Heading.WEST
-            self.x_set = True
-            self.y_set = False
+        if self.y_set[ID] and (self.y_o == self.airplane[ID].position.y - (self.y_distance[ID] - 1)):
+            if (self.airplane[ID].heading == Heading.NORTH):
+                self.airplane[ID].heading = Heading.EAST
+            elif (self.airplane[ID].heading == Heading.SOUTH):
+                self.airplane[ID].heading = Heading.WEST
+            self.x_set[ID] = True
+            self.y_set[ID] = False
 
     # Function to update values for airplanes on clock
     def trigger_update(self, airplane: Airplane):
@@ -84,10 +91,15 @@ class Controller:
         #     airplane.position.y = self.y_distance
         #     self.y_set = False
         
-    def run(self, airplane: Airplane):
-        self.airplane = airplane
-        self.calculate_distance(self.airplane)
-        self.calculate_heading()
-        self.check_for_collision(self.airplane)
-        self.trigger_update(self.airplane)
-        return self.heading
+    # Run one time step of the controller logic
+    def run(self, airplane: list):
+        n = len(airplane)
+        for ID in range(0,n):
+            self.airplane = airplane
+            self.calculate_distance(ID)
+            self.calculate_heading(ID)
+            self.check_for_collision(ID)
+            self.x_set[ID] = False
+            self.y_set[ID] = False
+            #self.trigger_update(self.airplane)
+        return self.airplane

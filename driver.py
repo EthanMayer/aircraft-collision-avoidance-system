@@ -9,17 +9,21 @@ from controller import *
 from time import sleep
 
 # Initialize airplane with arbitrary origin and destination coordinates
-origin = Coordinate(2, 2, 0)
-destination = Coordinate(4, 2, 0)
-a = Airplane(origin, destination)
-print(a)
+a = Airplane(Coordinate(2, 2, 0), Coordinate(4, 2, 0))
+b = Airplane(Coordinate(4, 2, 0), Coordinate(2, 2, 0))
+airplanes = list((a, b))
+n = len(airplanes)
+for i in range(0,n):
+    print(airplanes[i])
 
 # Initialize the controller with the airplane
-c = Controller(a)
+c = Controller(airplanes)
 
 print("====Run Loop====")
-for i in range(1,4):
-    a.heading = c.run(a)
-    a.run()
-    print(a)
+for i in range(0,3):
+    airplanes = c.run(airplanes)
+    print("t-" + str(i))
+    for j in range(0,n):
+        airplanes[j].run()
+        print("ID" + str(j) + ": " + str(airplanes[j]))
     sleep(1)
