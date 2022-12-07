@@ -20,6 +20,10 @@ class Controller:
     y_o: int = 0 # TODO: Temporary other airplane coordinate
 
     # Class methods
+    # Initialize the controller with the airplanes it is controlling
+    def __init__(self, airplane: Airplane) -> None:
+        self.airplane = airplane
+
     # Function to calculate the distance the airplane needs to travel
     def calculate_distance(self, airplane: Airplane):
         origin = airplane.origin
@@ -34,15 +38,18 @@ class Controller:
         if not self.y_set:
             if (self.x_distance > 0):
                 self.heading = Heading.EAST
+                self.x_set = True
             elif (self.x_distance < 0):
                 self.heading = Heading.WEST
-            self.x_set = True
+                self.x_set = True
         if not self.x_set:
             if (self.y_distance > 0):
                 self.heading = Heading.NORTH
+                self.y_set = True
             elif (self.y_distance < 0):
                 self.heading = Heading.SOUTH
-            self.y_set = True
+                self.y_set = True
+            
 
     # Function to check for possible collisions
     def check_for_collision(self, airplane: Airplane):
@@ -68,6 +75,8 @@ class Controller:
     def trigger_update(self, airplane: Airplane):
         # Update plane position
         airplane.heading = self.heading
+        self.x_set = False
+        self.y_set = False
         # if self.x_set:
         #     airplane.position.x = self.x_distance
         #     self.x_set = False
@@ -75,6 +84,10 @@ class Controller:
         #     airplane.position.y = self.y_distance
         #     self.y_set = False
         
-
-
-
+    def run(self, airplane: Airplane):
+        self.airplane = airplane
+        self.calculate_distance(self.airplane)
+        self.calculate_heading()
+        self.check_for_collision(self.airplane)
+        self.trigger_update(self.airplane)
+        return self.heading
