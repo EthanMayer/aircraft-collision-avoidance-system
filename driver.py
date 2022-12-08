@@ -9,8 +9,8 @@ from controller import *
 from time import sleep
 
 # Initialize airplane with arbitrary origin and destination coordinates
-a = Airplane(Coordinate(2, 2, 0), Coordinate(4, 2, 0))
-b = Airplane(Coordinate(4, 2, 0), Coordinate(2, 2, 0))
+a = Airplane(Coordinate(2, 2, 0), Coordinate(6, 2, 0))
+b = Airplane(Coordinate(6, 2, 0), Coordinate(2, 2, 0))
 airplanes = list((a, b))
 n = len(airplanes)
 for i in range(0,n):
@@ -20,7 +20,7 @@ for i in range(0,n):
 c = Controller(airplanes)
 
 print("====Run Loop====")
-for i in range(0,3):
+for i in range(0,10):
     airplanes = c.run(airplanes)
     print("t-" + str(i))
     for j in range(0,n):

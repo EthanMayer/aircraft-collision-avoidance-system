@@ -38,7 +38,7 @@ class Controller:
         self.x_distance[ID] = destination.x - origin.x
         self.y_distance[ID] = destination.y - origin.y
         # self.z_distance TODO: Altitude calculations
-    
+
     # Function to calculate the heading the plane needs to use
     def calculate_heading(self, ID):
         # Traverse either x axis or y axis one at a time, prioritizing x axis
@@ -56,27 +56,38 @@ class Controller:
             elif (self.y_distance[ID] < 0):
                 self.airplane[ID].heading = Heading.SOUTH
                 self.y_set[ID] = True
-            
+
 
     # Function to check for possible collisions
     def check_for_collision(self, ID):
-        # Check for collision along the x axis and have all planes turn right if true
-        if self.x_set[ID] and (self.x_o == self.airplane[ID].position.x - (self.x_distance[ID] - 1)):
-            if (self.airplane[ID].heading == Heading.EAST):
-                self.airplane[ID].heading = Heading.SOUTH
-            elif (self.airplane[ID].heading == Heading.WEST):
-                self.airplane[ID].heading = Heading.NORTH
-            self.x_set[ID] = False
-            self.y_set[ID] = True
+        # # Check for collision along the x axis and have all planes turn right if true
+        # if self.x_set[1] and (abs(self.airplane[1].position.x - self.airplane[0].position.x) <= 2):
+        #     if (self.airplane[1].heading == Heading.EAST):
+        #         self.airplane[1].heading = Heading.SOUTH
+        #     elif (self.airplane[1].heading == Heading.WEST):
+        #         self.airplane[1].heading = Heading.NORTH
+        #     self.x_set[1] = False
+        #     self.y_set[1] = True
 
-        # Check for collision along the y axis and have all planes turn right if true
-        if self.y_set[ID] and (self.y_o == self.airplane[ID].position.y - (self.y_distance[ID] - 1)):
-            if (self.airplane[ID].heading == Heading.NORTH):
-                self.airplane[ID].heading = Heading.EAST
-            elif (self.airplane[ID].heading == Heading.SOUTH):
-                self.airplane[ID].heading = Heading.WEST
-            self.x_set[ID] = True
-            self.y_set[ID] = False
+        # # Check for collision along the y axis and have all planes turn right if true
+        # elif self.y_set[1] and (abs(self.airplane[1].position.x - self.airplane[0].position.y) <= 2):
+        #     if (self.airplane[1].heading == Heading.NORTH):
+        #         self.airplane[1].heading = Heading.EAST
+        #     elif (self.airplane[1].heading == Heading.SOUTH):
+        #         self.airplane[1].heading = Heading.WEST
+        #     self.x_set[1] = True
+        #     self.y_set[1] = False
+        if (abs(self.airplane[1].position.x - self.airplane[0].position.x) <= 2) and (abs(self.airplane[1].position.y - self.airplane[0].position.y) <= 2):
+            if (self.airplane[1].heading == Heading.NORTH):
+                self.airplane[1].heading = Heading.EAST
+            elif (self.airplane[1].heading == Heading.EAST):
+                self.airplane[1].heading == Heading.SOUTH
+            elif (self.airplane[1].heading == Heading.SOUTH):
+                self.airplane[1].heading == Heading.WEST
+            else:
+                self.airplane[1].heading = Heading.NORTH
+            # self.x_set[1] = False
+            # self.y_set[1] = True
 
     # Function to update values for airplanes on clock
     def trigger_update(self, airplane: Airplane):
@@ -90,7 +101,7 @@ class Controller:
         # elif self.y_set:
         #     airplane.position.y = self.y_distance
         #     self.y_set = False
-        
+
     # Run one time step of the controller logic
     def run(self, airplane: list):
         n = len(airplane)

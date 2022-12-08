@@ -27,10 +27,11 @@ class Coordinate:
         self.y = y
         self.z = z
 
-    # Print formatting
+    # String formatting for printing
     def __str__(self) -> str:
         return f"({self.x}, {self.y}, {self.z})"
 
+    # Define == behavior
     def __eq__(self, __o: object) -> bool:
         return self.x == __o.x and self.y == __o.y and self.z == __o.z
 
@@ -50,12 +51,16 @@ class Airplane:
         self.destination = destination
         self.position = self.origin
 
-    # Print formatting
+    # String formatting for printing
     def __str__(self) -> str:
         if (self.position != self.destination):
             return f"Plane @ {self.position} heading {self.heading.name} toward {self.destination} @ speed 1"
         else:
             return f"Plane arrived at {self.destination}"
+
+    # String formatting for printing in lists
+    def __repr__(self) -> str:
+        return f"Plane @ {self.position}"
 
     # Update the plane's position using heading received from the centralized controller
     def run(self):
