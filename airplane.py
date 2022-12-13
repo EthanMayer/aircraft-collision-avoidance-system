@@ -53,10 +53,11 @@ class Airplane:
 
     # String formatting for printing
     def __str__(self) -> str:
-        if (self.position != self.destination):
-            return f"Plane @ {self.position} heading {self.heading.name} toward {self.destination} @ speed 1"
-        else:
+        if self.position is None:
             return f"Plane arrived at {self.destination}"
+        else:
+            return f"Plane @ {self.position} heading {self.heading.name} toward {self.destination} @ speed 1"
+
 
     # String formatting for printing in lists
     def __repr__(self) -> str:
@@ -73,3 +74,5 @@ class Airplane:
                 self.position.y = self.position.y + self.speed
             elif (self.heading == Heading.SOUTH):
                 self.position.y = self.position.y - self.speed
+        else:
+            self.position = None

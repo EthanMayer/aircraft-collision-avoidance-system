@@ -44,10 +44,17 @@ def graph():
 # Run loop
 print("====Run Loop====")
 for i in range(0,10):
+    delete = None
     graph()
     airplanes = c.run(airplanes)
     print("t-" + str(i))
     for j in range(0,n):
         airplanes[j].run()
         print("ID" + str(j) + ": " + str(airplanes[j]))
+        if airplanes[j].position is None:
+            delete = j
+            c.n = c.n - 1
+    if delete is not None:
+        del airplanes[delete]
+        n = n - 1
     sleep(1)
