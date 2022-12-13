@@ -77,7 +77,7 @@ class Controller:
         #         self.airplane[1].heading = Heading.WEST
         #     self.x_set[1] = True
         #     self.y_set[1] = False
-        if (abs(self.airplane[1].position.x - self.airplane[0].position.x) <= 2) and (abs(self.airplane[1].position.y - self.airplane[0].position.y) <= 2):
+        if (abs(self.airplane[1].position.x - self.airplane[0].position.x) <= 1) and (abs(self.airplane[1].position.y - self.airplane[0].position.y) <= 1):
             if (self.airplane[1].heading == Heading.NORTH):
                 self.airplane[1].heading = Heading.EAST
             elif (self.airplane[1].heading == Heading.EAST):
