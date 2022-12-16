@@ -85,12 +85,20 @@ class Controller:
 
     # Run one time step of the controller logic
     def run(self, airplane: list):
-        for ID in range(0,self.n):
-            self.airplane = airplane
-            self.calculate_distance(ID)
-            self.calculate_heading(ID)
-            self.x_set[ID] = False
-            self.y_set[ID] = False
+        self.airplane = airplane
+        self.n = len(airplane)
+        i = 0
+        # Use while loop instead of for..in loop so I can change the iterator value dynamically
+        while i < self.n:
+            if self.airplane[i].position is None:
+                del self.airplane[i]
+                self.n = self.n - 1
+            else:
+                self.calculate_distance(i)
+                self.calculate_heading(i)
+                self.x_set[i] = False
+                self.y_set[i] = False
+                i = i + 1
         for ID in range(0,self.n):
             self.check_for_collision(ID)
         return self.airplane

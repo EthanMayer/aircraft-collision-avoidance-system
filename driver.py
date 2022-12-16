@@ -11,7 +11,8 @@ from time import sleep
 # Initialize airplane with arbitrary origin and destination coordinates
 a = Airplane(Coordinate(2, 2, 0), Coordinate(6, 2, 0))
 b = Airplane(Coordinate(6, 2, 0), Coordinate(2, 2, 0))
-airplanes = list((a, b))
+c = Airplane(Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+airplanes = list((a, b, c))
 n = len(airplanes)
 for i in range(0,n):
     print(airplanes[i])
@@ -24,7 +25,7 @@ def graph():
     for y in range(19, -1, -1):
         for x in range(0,10):
             for i in range(0,n):
-                if (x == airplanes[i].position.x) and (y/2 == airplanes[i].position.y):
+                if airplanes[i].position is not None and (x == airplanes[i].position.x) and (y/2 == airplanes[i].position.y):
                     if (airplanes[i].position == airplanes[i].destination):
                         s = "L"
                     else:
@@ -47,14 +48,15 @@ for i in range(0,10):
     delete = None
     graph()
     airplanes = c.run(airplanes)
+    n = len(airplanes)
     print("t-" + str(i))
     for j in range(0,n):
         airplanes[j].run()
         print("ID" + str(j) + ": " + str(airplanes[j]))
-        if airplanes[j].position is None:
-            delete = j
-            c.n = c.n - 1
-    if delete is not None:
-        del airplanes[delete]
-        n = n - 1
+    #     if airplanes[j].position is None:
+    #         delete = j
+    #         c.n = c.n - 1
+    # if delete is not None:
+    #     del airplanes[delete]
+    #     n = n - 1
     sleep(1)
