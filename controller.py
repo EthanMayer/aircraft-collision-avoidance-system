@@ -9,13 +9,13 @@ from airplane import *
 # Class for the centralized aircraft controller
 class Controller:
     # Class variables
-    airplane: list
-    n: int
-    x_distance: list
-    y_distance: list
-    z_distance: list
-    x_set: list
-    y_set: list
+    airplane: list      # Internal list of airplanes
+    n: int              # Number of airplanes in list
+    x_distance: list    # X distance left to travel for each plane (list of ints)
+    y_distance: list    # Y distance left to travel for each plane (list of ints)
+    z_distance: list    # Z distance left to travel for each plane (list of ints)
+    x_set: list         # If the plane is traveling the X distance (list of bools)
+    y_set: list         # If the plane is traveling the Y distance (list of bools)
 
     # Class methods
     # Initialize the controller with the airplanes it is controlling
@@ -28,7 +28,7 @@ class Controller:
         self.x_set = [False] * self.n
         self.y_set = [False] * self.n
 
-    # Function to calculate the distance the airplane needs to travel
+    # Function to calculate the distance the airplane needs to travel in each axis
     def calculate_distance(self, ID):
         origin = self.airplane[ID].origin
         destination = self.airplane[ID].destination
@@ -57,9 +57,12 @@ class Controller:
 
     # Function to check for possible collisions
     def check_for_collision(self, ID):
-        if (ID < self.n - 1):
+        # Check to see there are planes further down the list to check
+        if (ID + 1 < self.n):
             for i in range(ID + 1, self.n):
+                # Check if a collision will occur within the next move
                 if (abs(self.airplane[ID].position.x - self.airplane[i].position.x) <= 2) and (abs(self.airplane[ID].position.y - self.airplane[i].position.y) <= 2):
+                    # If collision will occur, turn the higher ID plane right 90 degrees
                     if (self.airplane[i].heading == Heading.NORTH):
                         self.airplane[i].heading = Heading.EAST
                     elif (self.airplane[i].heading == Heading.EAST):
@@ -85,20 +88,28 @@ class Controller:
 
     # Run one time step of the controller logic
     def run(self, airplane: list):
+        # Receive inputs of plane locations
         self.airplane = airplane
         self.n = len(airplane)
+
         i = 0
         # Use while loop instead of for..in loop so I can change the iterator value dynamically
         while i < self.n:
+            # If the plane has landed, remove it from the list
             if self.airplane[i].position is None:
                 del self.airplane[i]
                 self.n = self.n - 1
+            # Otherwise, calculate the distance to go and heading to follow for each plane
             else:
                 self.calculate_distance(i)
                 self.calculate_heading(i)
                 self.x_set[i] = False
                 self.y_set[i] = False
                 i = i + 1
+
+        # Check for collisions AFTER new headings have been calculated
         for ID in range(0,self.n):
             self.check_for_collision(ID)
+
+        # Send outputs (new headings) to planes
         return self.airplane

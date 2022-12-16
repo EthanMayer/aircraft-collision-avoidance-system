@@ -8,31 +8,40 @@ from airplane import *
 from controller import *
 from time import sleep
 
-# Initialize airplane with arbitrary origin and destination coordinates
+# Initialize airplanes with arbitrary origin and destination coordinates
 a = Airplane(Coordinate(2, 2, 0), Coordinate(6, 2, 0))
 b = Airplane(Coordinate(6, 2, 0), Coordinate(2, 2, 0))
 c = Airplane(Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+
+# Put airplanes into a list
 airplanes = list((a, b, c))
 n = len(airplanes)
 for i in range(0,n):
     print(airplanes[i])
 
-# Initialize the controller with the airplane
+# Initialize the controller with the airplane list
 c = Controller(airplanes)
 
 # 2D Graph generator for aircraft flight paths
 def graph():
+    # Y axis -- needs twice the range of the x axis so that the | can be printed on every other line
     for y in range(19, -1, -1):
+        # X axis
         for x in range(0,10):
+            # Plot the airplanes on the graph
             for i in range(0,n):
                 if airplanes[i].position is not None and (x == airplanes[i].position.x) and (y/2 == airplanes[i].position.y):
                     if (airplanes[i].position == airplanes[i].destination):
+                        # Landed symbol
                         s = "L"
                     else:
+                        # Airplane traveling symbol
                         s = "A"
                     break
                 else:
+                    # Normal coordinate symbol
                     s = "o"
+            # Plot the connectors
             if (y%2 == 0):
                 if (x != 9):
                     print(" " + s + " ", end = "—")
@@ -45,18 +54,17 @@ def graph():
 # Run loop
 print("====Run Loop====")
 for i in range(0,10):
-    delete = None
+    # Graph and print current positions
     graph()
-    airplanes = c.run(airplanes)
-    n = len(airplanes)
     print("t-" + str(i))
     for j in range(0,n):
-        airplanes[j].run()
         print("ID" + str(j) + ": " + str(airplanes[j]))
-    #     if airplanes[j].position is None:
-    #         delete = j
-    #         c.n = c.n - 1
-    # if delete is not None:
-    #     del airplanes[delete]
-    #     n = n - 1
+
+    # Run the controller on the list of airplanes
+    airplanes = c.run(airplanes)
+    n = len(airplanes)
+
+    # Have the airplanes travel the next timestep
+    for j in range(0,n):
+        airplanes[j].run()
     sleep(1)
