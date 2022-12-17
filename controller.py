@@ -33,7 +33,7 @@ class Controller:
 
     # Function to calculate the midpoint of the flight to know when to start descending
     def calculate_midpoint(self, ID):
-        distance = Coordinate(self.airplane[ID].destination.x - self.airplane[ID].origin.x,self.airplane[ID].destination.y - self.airplane[ID].origin.y,0)
+        distance = Coordinate(self.airplane[ID].destination.x - self.airplane[ID].position.x,self.airplane[ID].destination.y - self.airplane[ID].position.y,0)
 
         # If the distance is even, normal case
         if ((abs(distance.x) + abs(distance.y)) % 2 == 0):
