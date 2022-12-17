@@ -29,14 +29,21 @@ c = Controller(airplanes)
 def graph():
     # Y axis -- needs twice the range of the x axis so that the | can be printed on every other line
     for y in range(19, -1, -1):
+
         # X axis
         for x in range(0,10):
+
             # Plot the airplanes on the graph
             for i in range(0,n):
+
                 if airplanes[i].position is not None and (x == airplanes[i].position.x) and (y/2 == airplanes[i].position.y):
+
+                    # Check if airplane has landed
                     if (airplanes[i].position.x == airplanes[i].destination.x) and (airplanes[i].position.y == airplanes[i].destination.y):
                         # Landed symbol
                         s = " L "
+
+                    # Airplane is still traveling
                     else:
                         # Airplane traveling symbol
                         s = chr(ord(airplanes[i].identifier))
@@ -45,10 +52,13 @@ def graph():
                         else:
                             s = s + str(airplanes[i].position.z)
                     break
+
+                # Otherwise, use generic map symbols
                 else:
                     # Normal coordinate symbol
                     s = " . "
-            # Plot the connectors
+
+            # Plot the connectors (graph edges)
             if (y%2 == 0):
                 if (x != 9):
                     print(s, end = "—")
@@ -60,6 +70,7 @@ def graph():
 
 # Run loop
 print("====Run Loop====")
+i = 0
 while(1):
     # Graph and print current positions
     graph()
@@ -73,10 +84,11 @@ while(1):
 
     # Have the airplanes travel the next timestep
     for j in range(0,n):
-        airplanes[j].run()
+        airplanes[j].fly_one_timestep()
 
     # If all planes have landed and stopped broadcasting their location, stop
     if (n == 0):
         break
 
+    i = i + 1
     sleep(1)

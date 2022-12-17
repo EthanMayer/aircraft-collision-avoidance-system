@@ -75,7 +75,7 @@ class Airplane:
         return f"Plane @ {self.position}"
 
     # Update the plane's position using heading input received from the centralized controller
-    def run(self):
+    def fly_one_timestep(self):
         # If the plane has not arrived at the destination, follow the heading given by the flight controller
         if (self.position != self.destination):
             if (self.heading == Heading.EAST):
