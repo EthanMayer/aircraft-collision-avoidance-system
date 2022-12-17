@@ -48,12 +48,12 @@ class Coordinate:
 # Class for the airplane
 class Airplane:
     # Class variables
-    identifier: chr                                 # Identifier to be printed on the map
-    origin: Coordinate = Coordinate(0, 0, 0)        # Starting location of airplane
-    destination: Coordinate = Coordinate(0, 0, 0)   # Landing location of airplane
-    position: Coordinate = Coordinate(0, 0, 0)      # Current location of airplane
-    heading: Heading = Heading.NORTH                # Current heading of airplane
-    speed: int = 1                                  # Current speed of airplane (constant 1km/s)
+    identifier: chr                                 # Identifier to be printed on the map (char)
+    origin: Coordinate = Coordinate(0, 0, 0)        # Starting location of airplane (Coordinate)
+    destination: Coordinate = Coordinate(0, 0, 0)   # Landing location of airplane (Coordinate)
+    position: Coordinate = Coordinate(0, 0, 0)      # Current location of airplane (Coordinate)
+    heading: Heading = Heading.NORTH                # Current heading of airplane (Heading)
+    speed: int = 1                                  # Current speed of airplane (constant 1km/s) (int)
 
     # Class methods
     # Initialize the airplane with origin location and destination location
@@ -86,6 +86,7 @@ class Airplane:
                 self.position.y = self.position.y + self.speed
             elif (self.heading == Heading.SOUTH):
                 self.position.y = self.position.y - self.speed
+
         # If the plane has landed, set position to none to stop reporting current location
         else:
             self.position = None

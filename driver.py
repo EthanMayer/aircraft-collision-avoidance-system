@@ -11,13 +11,22 @@ from controller import *
 from time import sleep
 
 # Initialize airplanes with arbitrary origin and destination coordinates
-a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
-b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
-c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
-d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
+# a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
+# b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
+# c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+# d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
+a = Airplane('A', Coordinate(5, 6, 0), Coordinate(8, 6, 0))
+b = Airplane('B', Coordinate(5, 4, 0), Coordinate(8, 4, 0))
+c = Airplane('C', Coordinate(6, 5, 0), Coordinate(8, 5, 0))
+d = Airplane('D', Coordinate(4, 5, 0), Coordinate(8, 5, 0))
+e = Airplane('E', Coordinate(5, 5, 0), Coordinate(1, 5, 0))
+f = Airplane('F', Coordinate(4, 6, 0), Coordinate(8, 6, 0))
+g = Airplane('G', Coordinate(4, 4, 0), Coordinate(8, 4, 0))
+h = Airplane('H', Coordinate(6, 6, 0), Coordinate(8, 6, 0))
+i = Airplane('I', Coordinate(6, 4, 0), Coordinate(8, 4, 0))
 
 # Put airplanes into a list
-airplanes = list((a, b, c, d))
+airplanes = list((a, b, c, d, e, f, g, h, i))
 n = len(airplanes)
 for i in range(0,n):
     print(airplanes[i])

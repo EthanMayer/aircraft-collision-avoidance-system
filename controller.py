@@ -13,10 +13,11 @@ from copy import deepcopy
 class Controller:
     # Class variables
     airplane: list          # Airplanes the controller is interfacing with (list of airplanes)
-    n: int                  # Number of airplanes in list
+    n: int                  # Number of airplanes in list (int)
     distance: list          # Coordinate objects representing the distance left to travel in each respective axis (list of Coordinates)
     next_position: list     # The coordiantes of the plane 1 time step after the heading is set by the controller (list of Coordinates)
-    z_navigation = False    # Whether or not the plane will be changing altitude to navigate rather than just the 2D directions (Bool)
+    midpoint: list          # Midpoints of the flights of the airplanes to know when to start descent (list of ints)
+    z_navigation = False    # Whether or not the plane will be changing altitude to avoid collisions rather than just the 2D directions (Bool)
 
     # Class methods
     # Initialize the controller with the airplanes it is controlling
@@ -25,14 +26,41 @@ class Controller:
         self.n = len(self.airplane)
         self.distance = [Coordinate] * self.n
         self.next_position = [Coordinate] * self.n
+        self.midpoint = [Coordinate] * self.n
+        for ID in range(0, self.n):
+            self.calculate_distance[ID]
+            self.calculate_midpoint[ID]
+
+    # Function to calculate the midpoint of the flight to know when to start descending
+    def calculate_midpoint(self, ID):
+        if (self.distance[ID].x + self.distance[ID].y % 2 == 0):
+            self.midpoint[ID] = (self.distance[ID].x + self.distance[ID].y)/2
+        else:
+            self.midpoint[ID] = -1 * (self.distance[ID].x + self.distance[ID].y)/2
+        # # Calculate X midpoint
+        # if (self.distance[ID].x % 2 == 0):
+        #     self.midpoint[ID].x = self.distance[ID].x/2
+
+        # # If the distance is odd, make it negative so it knows to level off for a few timesteps
+        # else:
+        #     self.midpoint[ID].x = -1 * self.distance[ID].x/2
+
+        # # Calculate Y midpoint
+        # if (self.distance[ID].y % 2 == 0):
+        #     self.midpoint[ID].y = self.distance[ID].y/2
+
+        # # If the distance is odd, make it negative so it knows to level off for a few timesteps
+        # else:
+        #     self.midpoint[ID].y = -1 * self.distance[ID].y/2
 
     # Function to calculate the distance the airplane needs to travel in each axis
     def calculate_distance(self, ID):
         self.distance[ID].x = self.airplane[ID].destination.x - self.airplane[ID].position.x
         self.distance[ID].y = self.airplane[ID].destination.y - self.airplane[ID].position.y
 
-    # Function to calculate the position of the aircraft at the next time step (in 1 hr)
+    # Function to calculate the position of the aircraft at the next time step (in 1 sec)
     def calculate_next_position(self, ID):
+        self.calculate_altitude(ID)
         # Grab the current position
         self.next_position[ID] = deepcopy(self.airplane[ID].position)
 
@@ -78,9 +106,24 @@ class Controller:
         elif ((self.next_position[ID].x == self.airplane[ID].destination.x) and (self.next_position[ID].y == self.airplane[ID].destination.y)) or (self.airplane[ID].position == self.airplane[ID].destination):
             self.airplane[ID].position.z = 0
 
-        # The plane climbs 10 km to cruising altitude within 1 hr (1 timestep) of takeoff
-        else:
-            self.airplane[ID].position.z = 10
+        # Check if the plane has reached the midpoint of the flight. If the flight distance was odd, special case (negative midpoint)
+        elif (self.distance[ID].x + self.distance[ID].y < 0):
+
+            # If the plane is before the midpoint (level off zone in this case), climb
+            if (self.distance[ID].x + self.distance[ID].y > (self.midpoint[ID] * -1) + 1):
+                self.airplane[ID].position.z = self.airplane[ID].position.z + 1
+
+            # If the plane is past the midpoint (level off zone in this case), descend
+            elif (self.distance[ID].x + self.distance[ID].y <= (self.midpoint[ID] * -1) - 1):
+                self.airplane[ID].position.z = self.airplane[ID].position.z - 1
+
+        # If the plane is before the midpoint, climb
+        elif (self.distance[ID].x + self.distance[ID].y > self.midpoint[ID]):
+            self.airplane[ID].position.z = self.airplane[ID].position.z + 1
+
+        # If the plane is past the midpoint, descend
+        elif (self.distance[ID].x + self.distance[ID].y <= self.midpoint[ID]):
+            self.airplane[ID].position.z = self.airplane[ID].position.z - 1
 
     # Function to check for possible collisions
     def check_for_collision(self, ID):
