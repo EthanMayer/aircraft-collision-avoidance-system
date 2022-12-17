@@ -14,9 +14,10 @@ from time import sleep
 a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
 b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
 c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
 
 # Put airplanes into a list
-airplanes = list((a, b, c))
+airplanes = list((a, b, c, d))
 n = len(airplanes)
 for i in range(0,n):
     print(airplanes[i])
@@ -59,7 +60,7 @@ def graph():
 
 # Run loop
 print("====Run Loop====")
-for i in range(0,11):
+while(1):
     # Graph and print current positions
     graph()
     print("t-" + str(i))

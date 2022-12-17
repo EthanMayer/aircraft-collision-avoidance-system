@@ -65,7 +65,7 @@ class Airplane:
 
     # String formatting for printing
     def __str__(self) -> str:
-        if self.position is None:
+        if self.position is None or (self.position == self.destination):
             return f"Plane arrived at {self.destination}"
         else:
             return f"Plane @ {self.position} heading {self.heading.name} toward {self.destination} @ speed 1"

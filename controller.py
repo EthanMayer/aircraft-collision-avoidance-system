@@ -86,12 +86,11 @@ class Controller:
         # Check to see there are planes further down the list to check
         if (ID + 1 < self.n):
             i = ID + 1
-
+            t = 0
             # Use while loop instead of for..in loop so I can change the iterator value dynamically
             while (i < self.n):
-                t = 0
                 # Check if a collision will occur within the next move
-                if (self.next_position[ID] == self.next_position[i]):
+                if (self.next_position[ID] == self.next_position[i]) or (self.airplane[ID].position == self.next_position[i]):
 
                     # If collision will occur, turn the higher ID plane right 90 degrees
                     if (self.airplane[i].heading == Heading.NORTH):
