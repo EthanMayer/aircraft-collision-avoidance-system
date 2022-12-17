@@ -21,6 +21,9 @@ class Coordinate:
     z: int
 
     # Class methods
+    #
+    # def __new__(cls: type[Self]) -> Self:
+    #     pass
     # Initialize coordinate with x, y, and z positions
     def __init__(self, x, y, z) -> None:
         self.x = x
@@ -34,6 +37,10 @@ class Coordinate:
     # Define == behavior
     def __eq__(self, __o: object) -> bool:
         return self.x == __o.x and self.y == __o.y and self.z == __o.z
+
+    # Define != behavior
+    def __ne__(self, __o: object) -> bool:
+        return self.x != __o.x or self.y != __o.y or self.z != __o.z
 
 # Class for the airplane
 class Airplane:

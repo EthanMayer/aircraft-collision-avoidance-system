@@ -5,17 +5,19 @@
 
 # Includes
 from airplane import *
+from copy import deepcopy
 
 # Class for the centralized aircraft controller
 class Controller:
     # Class variables
-    airplane: list      # Internal list of airplanes
+    airplane: list      # Airplanes the controller is interfacing with (list of airplanes)
     n: int              # Number of airplanes in list
     x_distance: list    # X distance left to travel for each plane (list of ints)
     y_distance: list    # Y distance left to travel for each plane (list of ints)
     z_distance: list    # Z distance left to travel for each plane (list of ints)
     x_set: list         # If the plane is traveling the X distance (list of bools)
     y_set: list         # If the plane is traveling the Y distance (list of bools)
+    next_position: list # The coordiantes of the plane 1 time step after the heading is set by the controller (list of Coordinates)
 
     # Class methods
     # Initialize the controller with the airplanes it is controlling
@@ -27,6 +29,7 @@ class Controller:
         self.z_distance = [int] * self.n
         self.x_set = [False] * self.n
         self.y_set = [False] * self.n
+        self.next_position = [Coordinate] * self.n
 
     # Function to calculate the distance the airplane needs to travel in each axis
     def calculate_distance(self, ID):
@@ -34,6 +37,21 @@ class Controller:
         destination = self.airplane[ID].destination
         self.x_distance[ID] = destination.x - origin.x
         self.y_distance[ID] = destination.y - origin.y
+
+    # Function to calculate the position of the aircraft at the next time step (in 1 hr)
+    def calculate_next_position(self, ID):
+        # Grab the current position
+        self.next_position[ID] = deepcopy(self.airplane[ID].position)
+
+        # Calculate the next position based on the current heading of the plane
+        if (self.airplane[ID].heading == Heading.EAST):
+            self.next_position[ID].x = self.airplane[ID].position.x + 1
+        if (self.airplane[ID].heading == Heading.WEST):
+            self.next_position[ID].x = self.airplane[ID].position.x - 1
+        if (self.airplane[ID].heading == Heading.NORTH):
+            self.next_position[ID].y = self.airplane[ID].position.y + 1
+        if (self.airplane[ID].heading == Heading.SOUTH):
+            self.next_position[ID].y = self.airplane[ID].position.y - 1
 
     # Function to calculate the heading the plane needs to use
     def calculate_heading(self, ID):
@@ -52,27 +70,30 @@ class Controller:
             elif (self.y_distance[ID] < 0):
                 self.airplane[ID].heading = Heading.SOUTH
                 self.y_set[ID] = True
+        self.calculate_next_position(ID)
 
     # Function to calculate the altitude of the plane
     def calculate_altitude(self, ID):
         # The plane climbs 10 km to cruising altitude within an hour of takeoff
         if (self.airplane[ID].position == self.airplane[ID].origin):
             self.airplane[ID].position.z = 10
-        # The plane decends to 0 km to land when reaching its destination
+        # The plane decends to 0 km in 1 hr (1 timestep) to land when reaching its destination
         elif ((self.airplane[ID].heading == Heading.EAST) and (self.airplane[ID].position.x + 1 == self.airplane[ID].destination.x) and (self.airplane[ID].position.y == self.airplane[ID].destination.y)) or \
          ((self.airplane[ID].heading == Heading.WEST) and (self.airplane[ID].position.x - 1 == self.airplane[ID].destination.x) and (self.airplane[ID].position.y == self.airplane[ID].destination.y)) or \
          ((self.airplane[ID].heading == Heading.NORTH) and (self.airplane[ID].position.x == self.airplane[ID].destination.x) and (self.airplane[ID].position.y + 1 == self.airplane[ID].destination.y)) or \
          ((self.airplane[ID].heading == Heading.SOUTH) and (self.airplane[ID].position.x == self.airplane[ID].destination.x) and (self.airplane[ID].position.y - 1 == self.airplane[ID].destination.y)):
             self.position.z = 0
 
-
     # Function to check for possible collisions
     def check_for_collision(self, ID):
         # Check to see there are planes further down the list to check
         if (ID + 1 < self.n):
-            for i in range(ID + 1, self.n):
+            i = ID + 1
+            while (i < self.n):
+                t = 0
                 # Check if a collision will occur within the next move
-                if (abs(self.airplane[ID].position.x - self.airplane[i].position.x) <= 2) and (abs(self.airplane[ID].position.y - self.airplane[i].position.y) <= 2):
+                if (self.next_position[ID] == self.next_position[i]):
+
                     # If collision will occur, turn the higher ID plane right 90 degrees
                     if (self.airplane[i].heading == Heading.NORTH):
                         self.airplane[i].heading = Heading.EAST
@@ -82,6 +103,14 @@ class Controller:
                         self.airplane[i].heading == Heading.WEST
                     else:
                         self.airplane[i].heading = Heading.NORTH
+                    self.calculate_next_position(i)
+                    i = i - 1
+                    t = t + 1
+
+                    # If the heading calculation has happened 4 times, all 2D directions are exhausted. Z must change
+                    if (t == 4):
+                        pass
+                i = i + 1
 
 
     # # Function to update values for airplanes on clock

@@ -71,4 +71,9 @@ for i in range(0,11):
     # Have the airplanes travel the next timestep
     for j in range(0,n):
         airplanes[j].run()
+
+    # If all planes have landed and stopped broadcasting their location, stop
+    if (n == 0):
+        break
+
     sleep(1)
