@@ -34,7 +34,6 @@ class Controller:
         destination = self.airplane[ID].destination
         self.x_distance[ID] = destination.x - origin.x
         self.y_distance[ID] = destination.y - origin.y
-        # self.z_distance TODO: Altitude calculations
 
     # Function to calculate the heading the plane needs to use
     def calculate_heading(self, ID):
@@ -53,6 +52,18 @@ class Controller:
             elif (self.y_distance[ID] < 0):
                 self.airplane[ID].heading = Heading.SOUTH
                 self.y_set[ID] = True
+
+    # Function to calculate the altitude of the plane
+    def calculate_altitude(self, ID):
+        # The plane climbs 10 km to cruising altitude within an hour of takeoff
+        if (self.airplane[ID].position == self.airplane[ID].origin):
+            self.airplane[ID].position.z = 10
+        # The plane decends to 0 km to land when reaching its destination
+        elif ((self.airplane[ID].heading == Heading.EAST) and (self.airplane[ID].position.x + 1 == self.airplane[ID].destination.x) and (self.airplane[ID].position.y == self.airplane[ID].destination.y)) or \
+         ((self.airplane[ID].heading == Heading.WEST) and (self.airplane[ID].position.x - 1 == self.airplane[ID].destination.x) and (self.airplane[ID].position.y == self.airplane[ID].destination.y)) or \
+         ((self.airplane[ID].heading == Heading.NORTH) and (self.airplane[ID].position.x == self.airplane[ID].destination.x) and (self.airplane[ID].position.y + 1 == self.airplane[ID].destination.y)) or \
+         ((self.airplane[ID].heading == Heading.SOUTH) and (self.airplane[ID].position.x == self.airplane[ID].destination.x) and (self.airplane[ID].position.y - 1 == self.airplane[ID].destination.y)):
+            self.position.z = 0
 
 
     # Function to check for possible collisions
@@ -73,18 +84,18 @@ class Controller:
                         self.airplane[i].heading = Heading.NORTH
 
 
-    # Function to update values for airplanes on clock
-    def trigger_update(self, airplane: Airplane):
-        # Update plane position
-        airplane.heading = self.heading
-        self.x_set = False
-        self.y_set = False
-        # if self.x_set:
-        #     airplane.position.x = self.x_distance
-        #     self.x_set = False
-        # elif self.y_set:
-        #     airplane.position.y = self.y_distance
-        #     self.y_set = False
+    # # Function to update values for airplanes on clock
+    # def trigger_update(self, airplane: Airplane):
+    #     # Update plane position
+    #     airplane.heading = self.heading
+    #     self.x_set = False
+    #     self.y_set = False
+    #     # if self.x_set:
+    #     #     airplane.position.x = self.x_distance
+    #     #     self.x_set = False
+    #     # elif self.y_set:
+    #     #     airplane.position.y = self.y_distance
+    #     #     self.y_set = False
 
     # Run one time step of the controller logic
     def run(self, airplane: list):
@@ -103,6 +114,7 @@ class Controller:
             else:
                 self.calculate_distance(i)
                 self.calculate_heading(i)
+                self.calculate_altitude(i)
                 self.x_set[i] = False
                 self.y_set[i] = False
                 i = i + 1

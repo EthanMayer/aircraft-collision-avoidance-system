@@ -31,29 +31,33 @@ def graph():
             # Plot the airplanes on the graph
             for i in range(0,n):
                 if airplanes[i].position is not None and (x == airplanes[i].position.x) and (y/2 == airplanes[i].position.y):
-                    if (airplanes[i].position == airplanes[i].destination):
+                    if (airplanes[i].position.x == airplanes[i].destination.x) and (airplanes[i].position.y == airplanes[i].destination.y):
                         # Landed symbol
-                        s = "L"
+                        s = " L "
                     else:
                         # Airplane traveling symbol
-                        s = "A"
+                        s = chr(ord('A') + i)
+                        if (airplanes[i].position.z < 10):
+                            s = s + "0" + str(airplanes[i].position.z)
+                        else:
+                            s = s + str(airplanes[i].position.z)
                     break
                 else:
                     # Normal coordinate symbol
-                    s = "o"
+                    s = " . "
             # Plot the connectors
             if (y%2 == 0):
                 if (x != 9):
-                    print(" " + s + " ", end = "—")
+                    print(s, end = "—")
                 else:
-                    print(" " + s, end = "")
+                    print(s, end = "")
             elif (y != 0) and (y != 19):
                 print(" | ", end = " ")
         print("")
 
 # Run loop
 print("====Run Loop====")
-for i in range(0,10):
+for i in range(0,11):
     # Graph and print current positions
     graph()
     print("t-" + str(i))

@@ -65,7 +65,7 @@ class Airplane:
     # Update the plane's position using heading input received from the centralized controller
     def run(self):
         # If the plane has not arrived at the destination, follow the heading given by the flight controller
-        if (self.position != self.destination):
+        if (self.position.x != self.destination.x) or (self.position.y != self.destination.y):
             if (self.heading == Heading.EAST):
                 self.position.x = self.position.x + self.speed
             elif (self.heading == Heading.WEST):
@@ -77,3 +77,4 @@ class Airplane:
         # If the plane has landed, set position to none to stop reporting current location
         else:
             self.position = None
+
