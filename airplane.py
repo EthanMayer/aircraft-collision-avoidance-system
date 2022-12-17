@@ -11,6 +11,7 @@ from copy import deepcopy
 
 # Class for the airplane's heading
 class Heading(Enum):
+    # Only 4 headings possible: North (0 degrees), East (90 degrees), South (180 degrees), West (270 degrees)
     NORTH = 0
     EAST = 90
     SOUTH = 180
@@ -24,9 +25,6 @@ class Coordinate:
     z: int
 
     # Class methods
-    #
-    # def __new__(cls: type[Self]) -> Self:
-    #     pass
     # Initialize coordinate with x, y, and z positions
     def __init__(self, x, y, z) -> None:
         self.x = x
@@ -53,7 +51,7 @@ class Airplane:
     destination: Coordinate = Coordinate(0, 0, 0)   # Landing location of airplane (Coordinate)
     position: Coordinate = Coordinate(0, 0, 0)      # Current location of airplane (Coordinate)
     heading: Heading = Heading.NORTH                # Current heading of airplane (Heading)
-    speed: int = 1                                  # Current speed of airplane (constant 1km/s) (int)
+    speed: int = 1                                  # Constant speed of airplane (constant 1km/min) (int)
 
     # Class methods
     # Initialize the airplane with origin location and destination location
@@ -74,20 +72,18 @@ class Airplane:
     def __repr__(self) -> str:
         return f"Plane @ {self.position}"
 
-    # Update the plane's position using heading input received from the centralized controller
+    # Update the plane's position using heading input received from the centralized controller (reflects traveling 1 timestep (1 minute))
     def fly_one_timestep(self):
         # If the plane has not arrived at the destination, follow the heading given by the flight controller
-        if (self.position != self.destination):
-            if (self.heading == Heading.EAST):
-                self.position.x = self.position.x + self.speed
-            elif (self.heading == Heading.WEST):
-                self.position.x = self.position.x - self.speed
-            elif (self.heading == Heading.NORTH):
-                self.position.y = self.position.y + self.speed
-            elif (self.heading == Heading.SOUTH):
-                self.position.y = self.position.y - self.speed
+        if (self.heading == Heading.EAST):
+            self.position.x = self.position.x + self.speed
+        elif (self.heading == Heading.WEST):
+            self.position.x = self.position.x - self.speed
+        elif (self.heading == Heading.NORTH):
+            self.position.y = self.position.y + self.speed
+        elif (self.heading == Heading.SOUTH):
+            self.position.y = self.position.y - self.speed
 
         # If the plane has landed, set position to none to stop reporting current location
-        else:
+        if (self.position == self.destination):
             self.position = None
-

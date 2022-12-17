@@ -11,22 +11,23 @@ from controller import *
 from time import sleep
 
 # Initialize airplanes with arbitrary origin and destination coordinates
-# a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
-# b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
-# c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
-# d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
-a = Airplane('A', Coordinate(5, 6, 0), Coordinate(8, 6, 0))
-b = Airplane('B', Coordinate(5, 4, 0), Coordinate(8, 4, 0))
-c = Airplane('C', Coordinate(6, 5, 0), Coordinate(8, 5, 0))
-d = Airplane('D', Coordinate(4, 5, 0), Coordinate(8, 5, 0))
-e = Airplane('E', Coordinate(5, 5, 0), Coordinate(1, 5, 0))
-f = Airplane('F', Coordinate(4, 6, 0), Coordinate(8, 6, 0))
-g = Airplane('G', Coordinate(4, 4, 0), Coordinate(8, 4, 0))
-h = Airplane('H', Coordinate(6, 6, 0), Coordinate(8, 6, 0))
-i = Airplane('I', Coordinate(6, 4, 0), Coordinate(8, 4, 0))
+a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
+b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
+c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
+# a = Airplane('A', Coordinate(5, 6, 0), Coordinate(8, 6, 0))
+# b = Airplane('B', Coordinate(5, 4, 0), Coordinate(8, 4, 0))
+# c = Airplane('C', Coordinate(6, 5, 0), Coordinate(8, 5, 0))
+# d = Airplane('D', Coordinate(4, 5, 0), Coordinate(8, 5, 0))
+# e = Airplane('E', Coordinate(5, 5, 0), Coordinate(1, 5, 0))
+# f = Airplane('F', Coordinate(4, 6, 0), Coordinate(8, 6, 0))
+# g = Airplane('G', Coordinate(4, 4, 0), Coordinate(8, 4, 0))
+# h = Airplane('H', Coordinate(6, 6, 0), Coordinate(8, 6, 0))
+# i = Airplane('I', Coordinate(6, 4, 0), Coordinate(8, 4, 0))
 
 # Put airplanes into a list
-airplanes = list((a, b, c, d, e, f, g, h, i))
+# airplanes = list((a, b, c, d, e, f, g, h, i))
+airplanes = list((a, b, c, d))
 n = len(airplanes)
 for i in range(0,n):
     print(airplanes[i])
@@ -45,27 +46,27 @@ def graph():
             # Plot the airplanes on the graph
             for i in range(0,n):
 
-                if airplanes[i].position is not None and (x == airplanes[i].position.x) and (y/2 == airplanes[i].position.y):
+                # Normal coordinate symbol
+                s = " · "
+
+                if airplanes[i].position is None:
 
                     # Check if airplane has landed
-                    if (airplanes[i].position.x == airplanes[i].destination.x) and (airplanes[i].position.y == airplanes[i].destination.y):
+                    if (x == airplanes[i].destination.x) and (y/2 == airplanes[i].destination.y):
                         # Landed symbol
-                        s = " L "
+                        s = " L!"
+                        break
 
-                    # Airplane is still traveling
+                # Check if airplane is still traveling
+                elif (x == airplanes[i].position.x) and (y/2 == airplanes[i].position.y):
+
+                    # Airplane traveling symbol is its identifier + altitude
+                    s = chr(ord(airplanes[i].identifier))
+                    if (airplanes[i].position.z < 10):
+                        s = s + "0" + str(airplanes[i].position.z)
                     else:
-                        # Airplane traveling symbol
-                        s = chr(ord(airplanes[i].identifier))
-                        if (airplanes[i].position.z < 10):
-                            s = s + "0" + str(airplanes[i].position.z)
-                        else:
-                            s = s + str(airplanes[i].position.z)
+                        s = s + str(airplanes[i].position.z)
                     break
-
-                # Otherwise, use generic map symbols
-                else:
-                    # Normal coordinate symbol
-                    s = " . "
 
             # Plot the connectors (graph edges)
             if (y%2 == 0):
@@ -79,19 +80,18 @@ def graph():
 
 # Run loop
 print("====Run Loop====")
-i = 0
 while(1):
     # Graph and print current positions
     graph()
     print("t-" + str(i))
     for j in range(0,n):
-        print("ID" + str(j) + ": " + str(airplanes[j]))
+        print("ID " + airplanes[j].identifier + ": " + str(airplanes[j]))
 
     # Run the controller on the list of airplanes
-    airplanes = c.run(airplanes)
+    airplanes = c.calculate_next_maneuver(airplanes)
     n = len(airplanes)
 
-    # Have the airplanes travel the next timestep
+    # Have the airplanes travel the next timestep (1 minute)
     for j in range(0,n):
         airplanes[j].fly_one_timestep()
 
@@ -99,5 +99,5 @@ while(1):
     if (n == 0):
         break
 
-    i = i + 1
+    # Sleep simulation 1 second to emulate 1 minute timestep (flight events occur, airplane moves along current heading, communication delay, etc.)
     sleep(1)
