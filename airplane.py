@@ -2,9 +2,12 @@
 #
 #   Author: Ethan Mayer
 #   Fall 2022
+#
+#   This file contains the classes required for the controller to function, such as the Heading object, Coordiante object, and Airplane object.
 
 # Includes
 from enum import Enum
+from copy import deepcopy
 
 # Class for the airplane's heading
 class Heading(Enum):
@@ -58,7 +61,7 @@ class Airplane:
         self.identifier = id
         self.origin = origin
         self.destination = destination
-        self.position = self.origin
+        self.position = deepcopy(self.origin)
 
     # String formatting for printing
     def __str__(self) -> str:
@@ -74,7 +77,7 @@ class Airplane:
     # Update the plane's position using heading input received from the centralized controller
     def run(self):
         # If the plane has not arrived at the destination, follow the heading given by the flight controller
-        if (self.position.x != self.destination.x) or (self.position.y != self.destination.y):
+        if (self.position != self.destination):
             if (self.heading == Heading.EAST):
                 self.position.x = self.position.x + self.speed
             elif (self.heading == Heading.WEST):

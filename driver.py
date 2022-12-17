@@ -2,6 +2,8 @@
 #
 #   Author: Ethan Mayer
 #   Fall 2022
+#
+#   This file is the driver for the aircraft controller. All airplanes are instantiated and all controller tests are found here.
 
 # Includes
 from airplane import *
