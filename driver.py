@@ -9,9 +9,9 @@ from controller import *
 from time import sleep
 
 # Initialize airplanes with arbitrary origin and destination coordinates
-a = Airplane(Coordinate(2, 2, 0), Coordinate(6, 2, 0))
-b = Airplane(Coordinate(6, 2, 0), Coordinate(2, 2, 0))
-c = Airplane(Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
+b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
+c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
 
 # Put airplanes into a list
 airplanes = list((a, b, c))
@@ -36,7 +36,7 @@ def graph():
                         s = " L "
                     else:
                         # Airplane traveling symbol
-                        s = chr(ord('A') + i)
+                        s = chr(ord(airplanes[i].identifier))
                         if (airplanes[i].position.z < 10):
                             s = s + "0" + str(airplanes[i].position.z)
                         else:

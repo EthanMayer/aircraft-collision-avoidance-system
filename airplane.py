@@ -38,6 +38,7 @@ class Coordinate:
 # Class for the airplane
 class Airplane:
     # Class variables
+    identifier: chr                                 # Identifier to be printed on the map
     origin: Coordinate = Coordinate(0, 0, 0)        # Starting location of airplane
     destination: Coordinate = Coordinate(0, 0, 0)   # Landing location of airplane
     position: Coordinate = Coordinate(0, 0, 0)      # Current location of airplane
@@ -46,7 +47,8 @@ class Airplane:
 
     # Class methods
     # Initialize the airplane with origin location and destination location
-    def __init__(self, origin, destination) -> None:
+    def __init__(self, id, origin, destination) -> None:
+        self.identifier = id
         self.origin = origin
         self.destination = destination
         self.position = self.origin
