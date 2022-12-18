@@ -10,31 +10,6 @@ from airplane import *
 from controller import *
 from time import sleep
 
-# Initialize airplanes with arbitrary origin and destination coordinates
-a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
-b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
-c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
-d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
-# a = Airplane('A', Coordinate(5, 6, 0), Coordinate(8, 6, 0))
-# b = Airplane('B', Coordinate(5, 4, 0), Coordinate(8, 4, 0))
-# c = Airplane('C', Coordinate(6, 5, 0), Coordinate(8, 5, 0))
-# d = Airplane('D', Coordinate(4, 5, 0), Coordinate(8, 5, 0))
-# e = Airplane('E', Coordinate(5, 5, 0), Coordinate(1, 5, 0))
-# f = Airplane('F', Coordinate(4, 6, 0), Coordinate(8, 6, 0))
-# g = Airplane('G', Coordinate(4, 4, 0), Coordinate(8, 4, 0))
-# h = Airplane('H', Coordinate(6, 6, 0), Coordinate(8, 6, 0))
-# i = Airplane('I', Coordinate(6, 4, 0), Coordinate(8, 4, 0))
-
-# Put airplanes into a list
-# airplanes = list((a, b, c, d, e, f, g, h, i))
-airplanes = list((a, b, c, d))
-n = len(airplanes)
-for i in range(0,n):
-    print(airplanes[i])
-
-# Initialize the controller with the airplane list
-c = Controller(airplanes)
-
 # 2D Graph generator for aircraft flight paths
 def graph():
     # Y axis -- needs twice the range of the x axis so that the | can be printed on every other line
@@ -77,6 +52,57 @@ def graph():
             elif (y != 0) and (y != 19):
                 print(" | ", end = " ")
         print("")
+
+############### Start of script
+
+# Prompt user for demo selection
+print("Aircraft Collision Avoidance System Demo:")
+print("Which demo would you like to run? (Please enter a digit)")
+print("1 Two Aircraft Routing")
+print("2 Four Aircraft Routing")
+print("3 Eight Aircraft Routing")
+
+# Grab user input
+demo = input()
+
+# Select demo and initialize airplanes with randomly generated origin and destination coordinates
+if (demo == "1"):
+    a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
+    b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
+
+    # Put airplanes into a list
+    airplanes = list((a, b))
+    n = len(airplanes)
+elif (demo == "2"):
+    a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
+    b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
+    c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+    d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
+
+    # Put airplanes into a list
+    airplanes = list((a, b, c, d))
+    n = len(airplanes)
+elif (demo == "3"):
+    a = Airplane('A', Coordinate(2, 2, 0), Coordinate(6, 2, 0))
+    b = Airplane('B', Coordinate(6, 2, 0), Coordinate(2, 2, 0))
+    c = Airplane('C', Coordinate(2, 5, 0), Coordinate(6, 5, 0))
+    d = Airplane('D', Coordinate(5, 5, 0), Coordinate(1, 1, 0))
+    e = Airplane('E', Coordinate(8, 2, 0), Coordinate(9, 5, 0))
+    f = Airplane('F', Coordinate(0, 0, 0), Coordinate(1, 9, 0))
+    g = Airplane('G', Coordinate(1, 9, 0), Coordinate(2, 8, 0))
+    h = Airplane('H', Coordinate(9, 9, 0), Coordinate(9, 0, 0))
+    i = Airplane('I', Coordinate(6, 0, 0), Coordinate(9, 1, 0))
+
+    # Put airplanes into a list
+    airplanes = list((a, b, c, d, e, f, g, h, i))
+    n = len(airplanes)
+
+# Print starting airplanes
+for i in range(0,n):
+    print(airplanes[i])
+
+# Initialize the controller with the airplane list
+c = Controller(airplanes)
 
 # Run loop
 print("====Run Loop====")
