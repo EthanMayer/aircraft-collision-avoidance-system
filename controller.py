@@ -96,19 +96,19 @@ class Controller:
         elif (self.midpoint[ID] < 0):
 
             # If the plane is before the midpoint (level off zone in this case), climb
-            if (abs(self.distance[ID].x) + abs(self.distance[ID].y) > (self.midpoint[ID] * -1) + 1):
+            if (abs(self.distance[ID].x) + abs(self.distance[ID].y) > (self.midpoint[ID] * -1) + 1) and (self.airplane[ID].position.z < 11):
                 self.airplane[ID].position.z = self.airplane[ID].position.z + 1
 
             # If the plane is past the midpoint (level off zone in this case), descend
-            elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= (self.midpoint[ID] * -1) - 1):
+            elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= (self.midpoint[ID] * -1) - 1)and (self.airplane[ID].position.z >= 0):
                 self.airplane[ID].position.z = self.airplane[ID].position.z - 1
 
         # If the plane is before the midpoint, climb
-        elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) > self.midpoint[ID]):
+        elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) > self.midpoint[ID]) and (self.airplane[ID].position.z < 11):
             self.airplane[ID].position.z = self.airplane[ID].position.z + 1
 
         # If the plane is past the midpoint, descend
-        elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= self.midpoint[ID]):
+        elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= self.midpoint[ID]) and (self.airplane[ID].position.z >= 0):
             self.airplane[ID].position.z = self.airplane[ID].position.z - 1
 
     # Function to check for possible collisions
