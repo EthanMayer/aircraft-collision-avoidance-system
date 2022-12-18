@@ -80,10 +80,12 @@ def graph():
 
 # Run loop
 print("====Run Loop====")
+i = 0
 while(1):
     # Graph and print current positions
     graph()
     print("t-" + str(i))
+    i = i + 1
     for j in range(0,n):
         print("ID " + airplanes[j].identifier + ": " + str(airplanes[j]))
 

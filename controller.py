@@ -88,7 +88,7 @@ class Controller:
     # Function to calculate the altitude of the plane
     def calculate_altitude(self, ID):
         # If the plane needs to change altitude to avoid collision, dive to avoid other planes
-        if (self.z_navigation[ID] == True):
+        if (self.z_navigation[ID] == True) and (self.airplane[ID].position.z > 0):
             self.airplane[ID].position.z = self.airplane[ID].position.z - 1
             self.z_navigation[ID] = False
 
@@ -100,7 +100,7 @@ class Controller:
                 self.airplane[ID].position.z = self.airplane[ID].position.z + 1
 
             # If the plane is past the midpoint (level off zone in this case), descend
-            elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= (self.midpoint[ID] * -1) - 1)and (self.airplane[ID].position.z >= 0):
+            elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= (self.midpoint[ID] * -1) - 1) and (self.airplane[ID].position.z > 0):
                 self.airplane[ID].position.z = self.airplane[ID].position.z - 1
 
         # If the plane is before the midpoint, climb
@@ -108,7 +108,7 @@ class Controller:
             self.airplane[ID].position.z = self.airplane[ID].position.z + 1
 
         # If the plane is past the midpoint, descend
-        elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= self.midpoint[ID]) and (self.airplane[ID].position.z >= 0):
+        elif (abs(self.distance[ID].x) + abs(self.distance[ID].y) <= self.midpoint[ID]) and (self.airplane[ID].position.z > 0):
             self.airplane[ID].position.z = self.airplane[ID].position.z - 1
 
     # Function to check for possible collisions
