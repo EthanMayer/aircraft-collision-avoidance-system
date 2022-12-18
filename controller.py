@@ -13,7 +13,7 @@ from copy import deepcopy
 class Controller:
     # Class variables
     airplane: list          # Airplanes the controller is interfacing with (list of airplanes)
-    n: int                  # Number of airplanes in list (int)
+    num_airplanes: int                  # Number of airplanes in list (int)
     distance: list          # Coordinate objects representing the distance left to travel in each respective axis (list of Coordinates)
     next_position: list     # The coordiantes of the plane 1 time step after the heading is set by the controller (list of Coordinates)
     midpoint: list          # Midpoints of the flights of the airplanes to know when to start descent (list of ints)
@@ -23,12 +23,12 @@ class Controller:
     # Initialize the controller with the airplanes it is controlling
     def __init__(self, airplane: list) -> None:
         self.airplane = airplane
-        self.n = len(self.airplane)
-        self.distance = [Coordinate] * self.n
-        self.next_position = [Coordinate] * self.n
-        self.midpoint = [Coordinate] * self.n
-        self.z_navigation = [False] * self.n
-        for ID in range(0,self.n):
+        self.num_airplanes = len(self.airplane)
+        self.distance = [Coordinate] * self.num_airplanes
+        self.next_position = [Coordinate] * self.num_airplanes
+        self.midpoint = [Coordinate] * self.num_airplanes
+        self.z_navigation = [False] * self.num_airplanes
+        for ID in range(0,self.num_airplanes):
             self.calculate_midpoint(ID)
 
     # Function to calculate the midpoint of the flight to know when to start descending
@@ -114,12 +114,12 @@ class Controller:
     # Function to check for possible collisions
     def check_for_collision(self, ID):
         # Check to see there are planes further down the list to check
-        if (ID + 1 < self.n):
-            t = 0
+        if (ID + 1 < self.num_airplanes):
+            tries = 0
 
             # Use while loop instead of for..in loop so I can change the iterator value dynamically
             i = ID + 1
-            while (i < self.n):
+            while (i < self.num_airplanes):
 
                 # Check if a collision will occur within the next move
                 if (self.next_position[ID] == self.next_position[i]) or (self.airplane[ID].position == self.next_position[i]):
@@ -137,10 +137,10 @@ class Controller:
                     # Calculate the next position based on the new heading
                     self.calculate_next_position(i)
                     i = i - 1
-                    t = t + 1
+                    tries = tries + 1
 
                     # If the heading calculation has happened 4 times, all 2D directions are exhausted. Z (altitude) must change
-                    if (t == 4):
+                    if (tries == 4):
                         self.z_navigation[i] = True
                         self.calculate_altitude(i)
                 i = i + 1
@@ -149,16 +149,16 @@ class Controller:
     def calculate_next_maneuver(self, airplane: list):
         # Receive inputs of plane locations
         self.airplane = airplane
-        self.n = len(airplane)
+        self.num_airplanes = len(airplane)
 
         # Use while loop instead of for..in loop so I can change the iterator value dynamically
         i = 0
-        while i < self.n:
+        while i < self.num_airplanes:
 
             # If the plane has landed, remove it from the list
             if self.airplane[i].position is None:
                 del self.airplane[i]
-                self.n = self.n - 1
+                self.num_airplanes = self.num_airplanes - 1
 
             # Otherwise, calculate the distance to go and heading to follow for each plane
             else:
@@ -168,7 +168,7 @@ class Controller:
                 i = i + 1
 
         # Check for collisions AFTER new headings have been calculated
-        for ID in range(0,self.n):
+        for ID in range(0,self.num_airplanes):
             self.check_for_collision(ID)
 
         # Send outputs (new headings) to planes
